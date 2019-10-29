@@ -4,6 +4,8 @@ on:
     branches:
       - master
       - develop
+    paths-ignore:
+      - '**.md'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -11,15 +13,21 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout branch - ${{ github.ref }}
+      uses: actions/checkout@v1
       with:
         ref: ${{ github.ref }}
-    - run: npm i
-    - run: |
-        npm run deploy:dev
-        ./scripts/verify-endpoint.sh dev ${{ secrets.DEV_TEST_API_KEY }}
+    - name: Install NPM dependencies
+      run: npm i
+    - name: Deploy to `dev` stage
+      run: npm run deploy:dev
       if: github.ref == 'refs/heads/develop'
-    - run: |
-        npm run deploy:prod
-        ./scripts/verify-endpoint.sh prod ${{ secrets.PROD_TEST_API_KEY }}
+    - name: Deploy to `prod` stage
+      run: npm run deploy:prod
+      if: github.ref == 'refs/heads/master'
+    - name: Verify `dev` endpoint
+      run: ./scripts/verify-endpoint.sh dev ${{ secrets.DEV_TEST_API_KEY }}
+      if: github.ref == 'refs/heads/develop'
+    - name: Verify `prod` endpoint
+      run: ./scripts/verify-endpoint.sh prod ${{ secrets.PROD_TEST_API_KEY }}
       if: github.ref == 'refs/heads/master'

@@ -13,7 +13,8 @@ then
   exit 1
 fi
 
-# We need this is running locally.
+# Export `AWS_PROFILE` if running the script locally.
+# `AWS_ACCESS_KEY_ID` only available in GitHub action.
 if [ -z ${AWS_ACCESS_KEY_ID} ]
 then
   export AWS_PROFILE=personal
@@ -22,11 +23,14 @@ fi
 STAGE=$1
 API_KEY=$2
 
+# Echo the result of `serverless info` to a temporary file.
 echo $(npx serverless info --verbose --stage ${STAGE}) > tmp.txt
 
+# Get the API endpoint from the temporary file, and create a URL for the request.
 BASE_URL=$(sed -n "s/.*ServiceEndpoint: \(.*\) ServerlessDeploymentBucketName.*/\1/p" tmp.txt)
 URL=${BASE_URL}/youtube-video/g4Hbz2jLxvQ
 
+# Use cURL to send the request, and get the HTTP code from the response.
 RESPONSE_CODE=$(
   curl -sL \
     -w "%{http_code}\\n" \
@@ -37,15 +41,20 @@ RESPONSE_CODE=$(
     -H "x-api-key: ${API_KEY}"
 )
 
-echo Endpoint: ${URL}
+echo # Blank line...
+echo Testing endpoint: ${URL}
 
+# Check the HTTP code - if not `200` exit with code `1`.
 if [ ${RESPONSE_CODE} == "200" ]
 then
-  echo Response: ${RESPONSE_CODE} 👍
+  echo Endpoint resesponse: ${RESPONSE_CODE} 👍
   exit 0
 else
-  echo Response: ${RESPONSE_CODE} 👎
+  echo Endpoint resesponse: ${RESPONSE_CODE} 👎
   exit 1
 fi
 
+echo # Blank line...
+
+# Remove the temporary file.
 rm tmp.txt

@@ -95,10 +95,20 @@ Branches and PRs are created for new changes, and merged to `develop` -> `master
 
 For `prod` stage, I'm using the [`serverless-plugin-warmup`](https://github.com/FidelLimited/serverless-plugin-warmup) to prevent cold starts, and therefore ensure latency is kept to a mimnimum.
 
+## CI/CD ♻️
+
+### Automatic deployments
+
+Automatic deployments are done with [GitHub Actions](./.github/workflows/main.yml), triggered by either a commit to `develop` or `master` branches.
+
+- `develop`: Deploys using stage `dev`.
+- `master`: Deploys using stage `prod`.
+
+Following deployment, a [bash script](./scripts/verify-endpoint.sh) is executed. This gets the API Gateway endpint from Serverless, and sends a HTTP request - if the http status code from the response is not `200`, it exits with code `1` and the build essentially fails.
+
 ## TODO 📝
 
 - Add tests.
-- Setup GitHub Actions for CI/CD.
 - Add JSDoc where needed.
 - Add ESLint.
 
