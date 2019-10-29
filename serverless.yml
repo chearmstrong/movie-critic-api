@@ -1,0 +1,95 @@
+# DEV is on;y for messing around with, in Postman etc.
+# Skills/capsules/apps should always use prod.
+
+service: movie-critic-api
+
+base_env_vars: &base_env_vars
+  STAGE: ${opt:stage, 'dev'}
+
+custom:
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-1
+  memorySize:
+    dev: 128
+    prod: 512
+  logRetentionInDays:
+    dev: 1
+    prod: 1
+  timeout:
+    dev: 10
+    prod: 5
+  warmupEnabled: # We only want to keep warm `prod`
+    dev: false
+    prod: true
+  apiGatewayCaching:
+    enabled: ${opt:cache, 'false'}
+    ttlInSeconds: 900
+  customDomain: # Custom domain is optional
+    domainName: api.chearmstrong.com
+    stage: ${opt:stage, 'dev'}
+    createRoute53Record: true
+    enabled: ${opt:customDomain, 'false'}
+  warmup:
+    cleanFolder: true
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: ${self:custom.stage}
+  stackName: ${self:service}-${self:custom.stage}
+  region: ${self:custom.region}
+  memorySize: ${self:custom.memorySize.${self:custom.stage}}
+  timeout: ${self:custom.timeout.${self:custom.stage}}
+  apiKeys: # Key generated per app/per stage
+    - bixby-capsule-${self:custom.stage}
+    - alexa-skill-${self:custom.stage}
+    - test-${self:custom.stage}
+  environment:
+    <<: *base_env_vars
+  logRetentionInDays: ${self:custom.logRetentionInDays.${self:custom.stage}}
+  apiGateway:
+    minimumCompressionSize: 0 # Compresses everything
+  iamManagedPolicies:
+    - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole' # https://github.com/serverless/serverless/issues/6241
+  iamRoleStatements:
+  - Effect: 'Allow'
+    Action:
+      - 'lambda:InvokeFunction'
+    Resource:
+      - !Join [':', [arn:aws:lambda, { Ref: AWS::Region }, { Ref: AWS::AccountId }, function, '${self:service}-${self:custom.stage}']]
+
+package:
+  excludeDevDependencies: false # ncc does this
+  individually: true
+  exclude:
+    - ./**
+  include:
+    - dist/**
+
+functions:
+  movieCriticApi:
+    name: ${self:service}-${self:custom.stage}
+    handler: dist/index.handler
+    description: Get the MP4 video URL of a YouTube video - used by Movie Critic capsule/skill.
+    warmup: ${self:custom.warmupEnabled.${self:custom.stage}}
+    events:
+      - http:
+          path: /youtube-video/{id}
+          method: any
+          cors: true
+          private: true
+          request:
+            parameters:
+              paths:
+                id: true
+          caching:
+            enabled: true
+            cacheKeyParameters:
+              - name: request.path.id
+
+plugins:
+  - serverless-offline
+  - serverless-api-gateway-caching
+  - serverless-domain-manager
+  - serverless-plugin-warmup
+  # - serverless-hooks-plugin

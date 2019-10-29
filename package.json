@@ -1,0 +1,28 @@
+{
+  "name": "movie-critic-api",
+  "version": "0.0.1",
+  "description": "Movie Critic API.",
+  "main": "src/index.js",
+  "scripts": {
+    "prebuild": "rm -rf ./dist",
+    "build": "ncc build ./src/index.js -o ./dist -C -m",
+    "deploy:dev": "if [ -z ${AWS_ACCESS_KEY_ID} ]; then export AWS_PROFILE=personal; fi && npm run build && serverless deploy --stage dev --conceal --force",
+    "deploy:prod": "if [ -z ${AWS_ACCESS_KEY_ID} ]; then export AWS_PROFILE=personal; fi && npm run build && serverless deploy --stage prod --cache true --customDomain true --conceal --force",
+    "prestart": "ncc build ./src/index.js -o ./dist -s",
+    "start": "export SLS_DEBUG=* && serverless offline --noAuth --printOutput"
+  },
+  "author": "Che Armstrong <neuroscience.che@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@zeit/ncc": "^0.20.5",
+    "serverless": "^1.55.1",
+    "serverless-api-gateway-caching": "^1.4.0",
+    "serverless-domain-manager": "^3.3.0",
+    "serverless-offline": "^6.0.0-alpha.41",
+    "serverless-plugin-warmup": "^4.7.1-rc.1"
+  },
+  "dependencies": {
+    "ramda": "^0.26.1",
+    "ytdl-core": "^1.0.0"
+  }
+}

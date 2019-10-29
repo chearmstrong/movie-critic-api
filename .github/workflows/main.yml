@@ -1,0 +1,25 @@
+name: Deploy on Push
+on:
+  push:
+    branches:
+      - master
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        ref: ${{ github.ref }}
+    - run: npm i
+    - run: |
+        npm run deploy:dev
+        ./scripts/verify-endpoint.sh dev ${{ secrets.DEV_TEST_API_KEY }}
+      if: github.ref == 'refs/heads/develop'
+    - run: |
+        npm run deploy:prod
+        ./scripts/verify-endpoint.sh prod ${{ secrets.PROD_TEST_API_KEY }}
+      if: github.ref == 'refs/heads/master'
