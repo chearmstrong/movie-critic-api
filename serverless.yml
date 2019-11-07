@@ -31,6 +31,7 @@ custom:
     enabled: ${opt:customDomain, 'false'}
   warmup:
     cleanFolder: true
+    concurrency: 3
 
 provider:
   name: aws
@@ -92,4 +93,3 @@ plugins:
   - serverless-api-gateway-caching
   - serverless-domain-manager
   - serverless-plugin-warmup
-  # - serverless-hooks-plugin
