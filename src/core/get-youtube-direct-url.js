@@ -11,7 +11,8 @@ const { YOUTUBE_BASE_URL } = require('../constants')
 const getBestDirectUrl = require('../lib/get-best-direct-url')
 
 const getYoutubeDirectUrl = async ({ videoId }) => {
-  const youTubeUrl = R.concat(YOUTUBE_BASE_URL, videoId)
+  try {
+    const youTubeUrl = R.concat(YOUTUBE_BASE_URL, videoId)
 
     if (ytdl.validateURL(youTubeUrl)) {
       console.log(`Getting video from URL: ${youTubeUrl}`)
@@ -23,6 +24,11 @@ const getYoutubeDirectUrl = async ({ videoId }) => {
     }
 
     return Promise.reject(`Invalid video URL: ${youTubeUrl}`)
+  } catch (error) {
+    console.log(error)
+
+    return Promise.reject(error)
+  }
 }
 
 module.exports = getYoutubeDirectUrl
