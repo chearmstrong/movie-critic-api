@@ -10,7 +10,7 @@ const ytdl = require('ytdl-core')
 const { YOUTUBE_BASE_URL } = require('../constants')
 const getBestDirectUrl = require('../lib/get-best-direct-url')
 
-const getYoutubeDirectUrl = async ({ videoId }) => {
+const getYoutubeDirectUrl = async videoId => {
   try {
     const youTubeUrl = R.concat(YOUTUBE_BASE_URL, videoId)
 
