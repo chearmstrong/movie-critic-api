@@ -20,7 +20,8 @@ Simple and light-weight (doesn't use any framework such as `express`).
 
 ## API 🦄
 
-- `GET <base URL>/you-tube/{id}` - Get streaming url of YouTube video.
+- `GET <base URL>/you-tube/{id}` - Get streaming url of a single YouTube video.
+- `GET <base URL>/you-tube?ids=id1,id2` - Get streaming urls of multiple (comma seperated IDs) YouTube videos.
 
 ### Base URLs
 
@@ -37,25 +38,35 @@ The `x-api-key` header is required. The key is generated at deploy time - check 
 
 ### Respose body
 
+200:
+
 - `GET <base URL>/you-tube/{id}`
 
-  200:
-
   ```JSON
-  { "url": "https://r2---sn-aigzrn7z.googlevideo.com/videoplayback?expire=1571883996&ei=fLewXZGDCZSMmLAP2uqx4Ak&ip=63.32.98.245&id=o-ANDQT0ZaibNBoRuzn-RgXsofkAjfGqxFvlK_CBXTupAd&itag=22&source=youtube&requiressl=yes&mm=31%2C26&mn=sn-aigzrn7z%2Csn-4g5ednld&ms=au%2Conr&mv=u&mvi=1&pl=23&mime=video%2Fmp4&ratebypass=yes&dur=938.689&lmt=1571650637212374&mt=1571861599&fvip=2&fexp=23842630&c=WEB&txp=3535432&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cmime%2Cratebypass%2Cdur%2Clmt&sig=ALgxI2wwRQIhAOdLRt8-B7YlZqgqTPGTDb6ei6p3cOhp5dcvm0R5HwzDAiAsmiwLZRit1FVoZaqaKvl-4OX-weQZHyzAWs_y3htrGw%3D%3D&lsparams=mm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl&lsig=AHylml4wRQIhAOOfsRDlVsr8NHhXL92oIKF_rw4PUDKcWOUXuG-PRu_UAiB3rsYNLGFP15V2FAWnxYA9D45ULcYjhM6tlvSGheZ_ag%3D%3D" }
+  { "url": "https://..." }
   ```
 
-  405:
+- `GET <base URL>/you-tube?ids=id1,id2`
+
 
   ```JSON
-  { "message": "Invalid HTTP Method: POST" }
+  {
+    "id1": "https://...",
+    "id2": "https://..."
+  }
   ```
 
-  400:
+405:
 
-  ```JSON
-  { "error": "Houston, we have a problem!" }
-  ```
+```JSON
+{ "message": "Invalid HTTP Method: POST" }
+```
+
+400:
+
+```JSON
+{ "error": "Houston, we have a problem!" }
+```
 
   Other:
 

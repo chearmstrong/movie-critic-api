@@ -87,6 +87,19 @@ functions:
             enabled: true
             cacheKeyParameters:
               - name: request.path.id
+      - http:
+          path: /youtube-video
+          method: any
+          cors: true
+          private: true
+          request:
+            parameters:
+              querystrings:
+                ids: true
+          caching:
+            enabled: true
+            cacheKeyParameters:
+              - name: request.querystring.ids
 
 plugins:
   - serverless-offline

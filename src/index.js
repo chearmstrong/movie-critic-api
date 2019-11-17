@@ -8,6 +8,11 @@ const R = require('ramda')
  */
 const getHandlers = require('./lib/get-handlers')
 
+const getPayload = R.either(
+  R.path(['pathParameters', 'id']),
+  R.path(['queryStringParameters', 'ids'])
+)
+
 module.exports.handler = async event => {
   const warmUpRequest = R.propEq('source', 'serverless-plugin-warmup', event)
 
@@ -29,8 +34,8 @@ module.exports.handler = async event => {
     const handler = R.prop(httpMethod, handlers)
 
     if (handler) {
-      const videoId = R.path(['pathParameters', 'id'], event)
-      const responseBody = await handler({ videoId })
+      const payload = getPayload(event)
+      const responseBody = await handler(payload)
 
       return { statusCode: 200, body: JSON.stringify(responseBody) }
     }
