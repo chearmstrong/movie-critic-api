@@ -35,9 +35,6 @@ module.exports.handler = async event => {
 
     if (handler) {
       const payload = getPayload(event)
-
-      console.log('___payload', payload)
-
       const responseBody = await handler(payload)
 
       return { statusCode: 200, body: JSON.stringify(responseBody) }
