@@ -92,10 +92,6 @@ functions:
           method: any
           cors: true
           private: true
-          request:
-            parameters:
-              querystrings:
-                ids: true
           caching:
             enabled: true
             cacheKeyParameters:
