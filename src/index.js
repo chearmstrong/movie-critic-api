@@ -37,17 +37,28 @@ module.exports.handler = async event => {
       const payload = getPayload(event)
       const responseBody = await handler(payload)
 
-      return { statusCode: 200, body: JSON.stringify(responseBody) }
+      return {
+        statusCode: 200,
+        body: JSON.stringify(responseBody),
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      }
     }
 
     return {
       statusCode: 405,
-      body: JSON.stringify({ message: `Invalid HTTP Method: ${httpMethod}` })
+      body: JSON.stringify({ message: `Invalid HTTP Method: ${httpMethod}` }),
+      headers: { 'Access-Control-Allow-Origin': '*' }
     }
   } catch (error) {
+    const message = error.message || 'Houston, we have a problem!'
+
+    console.log(`Error: ${message}`)
+    console.log({ error })
+
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: error.message || 'Houston, we have a problem!' })
+      body: JSON.stringify({ error: message }),
+      headers: { 'Access-Control-Allow-Origin': '*' }
     }
   }
 }

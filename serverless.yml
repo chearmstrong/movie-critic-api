@@ -17,10 +17,13 @@ custom:
     prod: 1
   timeout:
     dev: 10
-    prod: 5
+    prod: 10
   warmupEnabled: # We only want to keep warm `prod`
     dev: false
     prod: true
+  endpointType: # We only want to keep warm `prod`
+    dev: EDGE
+    prod: REGIONAL # Becase custom domain is EDGE
   apiGatewayCaching:
     enabled: ${opt:cache, 'false'}
     ttlInSeconds: 900
@@ -29,12 +32,14 @@ custom:
     stage: ${opt:stage, 'dev'}
     createRoute53Record: true
     enabled: ${opt:customDomain, 'false'}
+    endpointType: edge
   warmup:
     cleanFolder: true
     concurrency: 3
 
 provider:
   name: aws
+  endpointType: ${self:custom.endpointType.${self:custom.stage}}
   runtime: nodejs10.x
   stage: ${self:custom.stage}
   stackName: ${self:service}-${self:custom.stage}
