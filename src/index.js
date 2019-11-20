@@ -13,6 +13,13 @@ const getPayload = R.either(
   R.path(['queryStringParameters', 'ids'])
 )
 
+const getReturnPayload = R.applySpec({
+  isBase64Encoded: R.F,
+  statusCode: R.prop('statusCode'),
+  body: R.o(JSON.stringify, R.propOr({}, 'body')),
+  headers: R.always({ 'Access-Control-Allow-Origin': '*' })
+})
+
 module.exports.handler = async event => {
   const warmUpRequest = R.propEq('source', 'serverless-plugin-warmup', event)
 
@@ -25,7 +32,7 @@ module.exports.handler = async event => {
   if (warmUpRequest) {
     console.log('Warming up the Lambda')
 
-    return { statusCode: 204 }
+    return getReturnPayload({ statusCode: 204 })
   }
 
   try {
@@ -37,28 +44,16 @@ module.exports.handler = async event => {
       const payload = getPayload(event)
       const responseBody = await handler(payload)
 
-      return {
-        statusCode: 200,
-        body: JSON.stringify(responseBody),
-        headers: { 'Access-Control-Allow-Origin': '*' }
-      }
+      return getReturnPayload({ statusCode: 200, body: responseBody })
     }
 
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: `Invalid HTTP Method: ${httpMethod}` }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
-    }
+    return getReturnPayload({ statusCode: 405, body: { message: `Invalid HTTP Method: ${httpMethod}` } })
   } catch (error) {
     const message = error.message || 'Houston, we have a problem!'
 
     console.log(`Error: ${message}`)
     console.log({ error })
 
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: message }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
-    }
+    return getReturnPayload({ statusCode: 400, body: { error: message } })
   }
 }

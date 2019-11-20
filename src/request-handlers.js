@@ -13,7 +13,11 @@ const getYoutubeDirectUrlForMany = async ids => {
   const uniqueIds = [...new Set(youTubeIds)]
   const promises = uniqueIds.map(id => getYoutubeDirectUrl(id)
     .then(res => ({ [id]: res.url }))
-    .catch(error => ({ [id]: `Error fetching for ID ${id}`, error }))
+    .catch(error => {
+      console.log(`Error fetching for ID ${id}`)
+
+      return { [id]: null , error }
+    })  
   )
   const response = await Promise.all(promises)
   const returnPayload = R.o(
