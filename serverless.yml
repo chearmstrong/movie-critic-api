@@ -58,6 +58,8 @@ provider:
     - test-${self:custom.stage}
   environment:
     <<: *base_env_vars
+    XRAY_TRACING: ${self:custom.xrayTracing.${self:custom.stage}}
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1 # http://bit.ly/37E5acW
   logRetentionInDays: ${self:custom.logRetentionInDays.${self:custom.stage}}
   apiGateway:
     minimumCompressionSize: 0 # Compresses everything

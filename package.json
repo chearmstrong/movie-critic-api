@@ -15,14 +15,15 @@
   "license": "MIT",
   "devDependencies": {
     "@zeit/ncc": "^0.20.5",
-    "serverless": "^1.57.0",
+    "serverless": "^1.58.0",
     "serverless-api-gateway-caching": "^1.4.1",
     "serverless-domain-manager": "^3.3.0",
-    "serverless-offline": "^6.0.0-alpha.44",
+    "serverless-offline": "^6.0.0-alpha.48",
     "serverless-plugin-warmup": "^4.7.1-rc.1"
   },
   "dependencies": {
+    "aws-xray-sdk-core": "^2.5.0",
     "ramda": "^0.26.1",
-    "ytdl-core": "^1.0.0"
+    "ytdl-core": "^1.0.1"
   }
 }
