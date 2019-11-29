@@ -5,7 +5,7 @@ if (process.env.XRAY_TRACING === 'true') {
   const AWSXRay = require('aws-xray-sdk-core')
 
   AWSXRay.captureHTTPsGlobal(require('https'))
-  AWSXRay.capturePromise()
+  // AWSXRay.capturePromise()
 }
 
 /**
