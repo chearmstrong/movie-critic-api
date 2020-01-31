@@ -13,21 +13,21 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-    - name: Checkout branch - ${{ github.ref }}
-      uses: actions/checkout@v1
-      with:
-        ref: ${{ github.ref }}
-    - name: Install NPM dependencies
-      run: npm i
-    - name: Deploy to `dev` stage
-      run: npm run deploy:dev
-      if: github.ref == 'refs/heads/develop'
-    - name: Deploy to `prod` stage
-      run: npm run deploy:prod
-      if: github.ref == 'refs/heads/master'
-    - name: Verify `dev` endpoint
-      run: ./scripts/verify-endpoint.sh dev ${{ secrets.DEV_TEST_API_KEY }}
-      if: github.ref == 'refs/heads/develop'
-    - name: Verify `prod` endpoint
-      run: ./scripts/verify-endpoint.sh prod ${{ secrets.PROD_TEST_API_KEY }}
-      if: github.ref == 'refs/heads/master'
+      - name: Checkout branch - ${{ github.ref }}
+        uses: actions/checkout@v1
+        with:
+          ref: ${{ github.ref }}
+      - name: Install NPM dependencies
+        run: npm ci
+      - name: Deploy to `dev` stage
+        run: npm run deploy:dev
+        if: github.ref == 'refs/heads/develop'
+      - name: Deploy to `prod` stage
+        run: npm run deploy:prod
+        if: github.ref == 'refs/heads/master'
+      - name: Verify `dev` endpoint
+        run: ./scripts/verify-endpoint.sh dev ${{ secrets.DEV_TEST_API_KEY }}
+        if: github.ref == 'refs/heads/develop'
+      - name: Verify `prod` endpoint
+        run: ./scripts/verify-endpoint.sh prod ${{ secrets.PROD_TEST_API_KEY }}
+        if: github.ref == 'refs/heads/master'
