@@ -1,3 +1,5 @@
+/* eslint-disable fp/no-nil, fp/no-unused-expression */
+
 /**
  * External dependencies.
  */
@@ -11,19 +13,17 @@ const getYoutubeDirectUrl = require('./core/get-youtube-direct-url')
 const getYoutubeDirectUrlForMany = async ids => {
   const youTubeIds = ids.split(',')
   const uniqueIds = [...new Set(youTubeIds)]
-  const promises = uniqueIds.map(id => getYoutubeDirectUrl(id)
-    .then(res => ({ [id]: res.url }))
-    .catch(error => {
-      console.log(`Error fetching for ID ${id}`)
+  const promises = uniqueIds.map(id =>
+    getYoutubeDirectUrl(id)
+      .then(res => ({ [id]: res.url }))
+      .catch(error => {
+        console.log(`Error fetching for ID ${id}`)
 
-      return { [id]: null , error }
-    })  
+        return { [id]: null, error }
+      })
   )
   const response = await Promise.all(promises)
-  const returnPayload = R.o(
-    R.reduce(R.mergeRight, {}),
-    R.reject(R.has('error'))
-  )(response)
+  const returnPayload = R.o(R.reduce(R.mergeRight, {}), R.reject(R.has('error')))(response)
 
   return returnPayload
 }
