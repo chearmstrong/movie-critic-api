@@ -1,3 +1,5 @@
+/* eslint-disable fp/no-nil, fp/no-unused-expression */
+
 /**
  * Only do this is X-Ray treacing is enabled.
  */
@@ -18,10 +20,7 @@ const R = require('ramda')
  */
 const getHandlers = require('./lib/get-handlers')
 
-const getPayload = R.either(
-  R.path(['pathParameters', 'id']),
-  R.path(['queryStringParameters', 'ids'])
-)
+const getPayload = R.either(R.path(['pathParameters', 'id']), R.path(['queryStringParameters', 'ids']))
 
 const getReturnPayload = R.applySpec({
   isBase64Encoded: R.F,

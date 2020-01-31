@@ -6,15 +6,15 @@ Simple and light-weight (doesn't use any framework such as `express`).
 
 ## Getting started 💻
 
-1. Clone the repository
-2. Install Node using Node Version Manager (NVM)
+1.  Clone the repository
+2.  Install Node using Node Version Manager (NVM)
 
         $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
         $ nvm install 10.16
 
     A `.nvmrc` file is also included in the project for reference.
 
-3. Install project dependencies
+3.  Install project dependencies
 
         $ npm i
 
@@ -26,11 +26,11 @@ Simple and light-weight (doesn't use any framework such as `express`).
 ### Base URLs
 
 - dev: Check the AWS console, or Serverless deployment output.
-- prod: `api.chearmstrong.com`*
+- prod: `api.chearmstrong.com`\*
 
-*Using a custom domain is optional - I'm using the [`serverless-domain-manager`](https://github.com/amplify-education/serverless-domain-manager) plugin. To use _without_ a custom domain, [remove the `customDomain` section from `custom` in `serverless.yml`](serverless.yml#L24), and [remove reference to the  `serverless-domain-manager` plugin](serverless.yml#L81)
+\*Using a custom domain is optional - I'm using the [`serverless-domain-manager`](https://github.com/amplify-education/serverless-domain-manager) plugin. To use _without_ a custom domain, [remove the `customDomain` section from `custom` in `serverless.yml`](serverless.yml#L24), and [remove reference to the `serverless-domain-manager` plugin](serverless.yml#L81)
 
-**Note:** To help reduce latency on the `prod` API, `GET` responses are cached for 900 seconds -  For more details see [here](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html).
+**Note:** To help reduce latency on the `prod` API, `GET` responses are cached for 900 seconds - For more details see [here](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html).
 
 ### Auth
 
@@ -48,13 +48,12 @@ The `x-api-key` header is required. The key is generated at deploy time - check 
 
 - `GET <base URL>/you-tube?ids=id1,id2`
 
-
-  ```JSON
-  {
-    "id1": "https://...",
-    "id2": "https://..."
-  }
-  ```
+```JSON
+{
+  "id1": "https://...",
+  "id2": "https://..."
+}
+```
 
 405:
 
@@ -68,9 +67,9 @@ The `x-api-key` header is required. The key is generated at deploy time - check 
 { "error": "Houston, we have a problem!" }
 ```
 
-  Other:
+Other:
 
-  See responses for details.
+See responses for details.
 
 ## Running and debugging 🐛
 
@@ -78,11 +77,11 @@ You can run and debug this locally using [`serverless-offline`](https://github.c
 
 1. Run `npm run start`.
 
-    A bundle is built using [`ncc`](https://github.com/zeit/ncc), and a _local server_ is started.
+   A bundle is built using [`ncc`](https://github.com/zeit/ncc), and a _local server_ is started.
 
 2. Using the local endpoint output to the console, send a request using Postman.
 
-    You don't need the `x-api-key` header when running locally.
+   You don't need the `x-api-key` header when running locally.
 
 ## Deploying 🤖
 
@@ -121,7 +120,7 @@ Following deployment, a [bash script](./scripts/verify-endpoint.sh) is executed.
 
 - Add tests.
 - Add JSDoc where needed.
-- Add ESLint.
+- ~Add ESLint.~
 
 ### Usage and license
 

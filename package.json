@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "prebuild": "rm -rf ./dist",
-    "build": "ncc build ./src/index.js -o ./dist -C -m",
+    "build": "ncc build ./src/index.js -o ./dist -m",
     "deploy:dev": "if [ -z ${AWS_ACCESS_KEY_ID} ]; then export AWS_PROFILE=personal; fi && npm run build && serverless deploy --stage dev --conceal --force",
     "deploy:prod": "if [ -z ${AWS_ACCESS_KEY_ID} ]; then export AWS_PROFILE=personal; fi && npm run build && serverless deploy --stage prod --cache true --customDomain true --conceal --force",
     "prestart": "ncc build ./src/index.js -o ./dist -s",
@@ -15,15 +15,37 @@
   "license": "MIT",
   "devDependencies": {
     "@zeit/ncc": "^0.20.5",
-    "serverless": "^1.58.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-fp": "^2.3.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-ramda": "^2.5.1",
+    "eslint-config-prettier": "^6.9.0",
+    "husky": "^4.2.1",
+    "lint-staged": "^10.0.7",
+    "prettier": "^1.19.1",
+    "serverless": "^1.62.0",
     "serverless-api-gateway-caching": "^1.4.1",
-    "serverless-domain-manager": "^3.3.0",
+    "serverless-domain-manager": "^3.3.1",
     "serverless-offline": "^6.0.0-alpha.48",
-    "serverless-plugin-warmup": "^4.7.1-rc.1"
+    "serverless-plugin-warmup": "^4.8.0"
   },
   "dependencies": {
     "aws-xray-sdk-core": "^2.5.0",
     "ramda": "^0.26.1",
-    "ytdl-core": "^1.0.1"
+    "ytdl-core": "^1.0.7"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   }
 }

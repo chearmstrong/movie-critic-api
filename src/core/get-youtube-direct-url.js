@@ -1,3 +1,5 @@
+/* eslint-disable fp/no-nil, fp/no-unused-expression */
+
 /**
  * External dependencies.
  */
