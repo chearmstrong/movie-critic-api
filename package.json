@@ -32,7 +32,7 @@
   "dependencies": {
     "aws-xray-sdk-core": "^2.5.0",
     "ramda": "^0.26.1",
-    "ytdl-core": "^1.0.9"
+    "ytdl-core": "^4.0.3"
   },
   "husky": {
     "hooks": {
