@@ -25,17 +25,14 @@ custom:
     dev: false
     prod: true
   endpointType: # We only want to keep warm `prod`
-    dev: EDGE
-    prod: REGIONAL # Becase custom domain is EDGE
-  apiGatewayCaching:
-    enabled: ${opt:cache, 'false'}
-    ttlInSeconds: 900
+    dev: REGIONAL # Edge domains are not supported by AWS for HTTP APIs.
+    prod: REGIONAL # Edge domains are not supported by AWS for HTTP APIs.
   customDomain: # Custom domain is optional
     domainName: api.chearmstrong.com
     stage: ${opt:stage, 'dev'}
     createRoute53Record: true
     enabled: ${opt:customDomain, 'false'}
-    endpointType: edge
+    endpointType: regional
   warmup:
     cleanFolder: true
     concurrency: 3
