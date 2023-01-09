@@ -26,7 +26,7 @@
     "serverless": "^1.83.1",
     "serverless-api-gateway-caching": "^1.5.1",
     "serverless-domain-manager": "^3.3.2",
-    "serverless-offline": "^6.8.0",
+    "serverless-offline": "^12.0.4",
     "serverless-plugin-warmup": "^4.9.0"
   },
   "dependencies": {
